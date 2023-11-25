@@ -144,12 +144,12 @@ void generateMaze(int **maze, int **visited, int y, int x, int size) {
     int dirs[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     visited[x][y] = 1;
     maze[x][y] = 0; // 0 represents a path
+        
 
     // Shuffle directions
     for (int i = 0; i < 4; i++) {
-        // srand((unsigned) time(NULL));
         int j = (int)(rand()) % 4;
-        pritnf(" j:%d\n",j);
+        printf("j:%d\n",j);
 
         int temp[2];
         temp[0] = dirs[i][0];
@@ -187,6 +187,7 @@ void ensureExit(int **maze, int size) {
 }
 
 int** createMaze(int size) {
+    srand((unsigned) time(NULL));
     int **maze = (int **)malloc(size * sizeof(int *));
     int **visited = (int **)malloc(size * sizeof(int *));
     for (int i = 0; i < size; i++) {
@@ -208,10 +209,6 @@ int** createMaze(int size) {
 
     // Ensure exit
     ensureExit(maze, size);
-
-    // // Ensure entry and exit
-    // maze[entryY][entryX] = 0;
-    // maze[exitY][exitX] = 0;
 
     for (int i = 0; i < size; i++) {
         free(visited[i]);
