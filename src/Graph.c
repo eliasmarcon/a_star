@@ -7,6 +7,14 @@
 #include <stdio.h>
 #include <time.h>
 
+/**
+ * Finds if there is a duplicate value in the given array.
+ *
+ * @param row    The array of integers to search for duplicates.
+ * @param max    The maximum number of elements in the array.
+ * @param target The target value to search for duplicates of.
+ * @return       Returns true if a duplicate of the target value is found, false otherwise.
+ */
 bool findDuplicate(int* row, int max, int target)
 {
     for (int i = 0; i < max; i++)
@@ -23,6 +31,13 @@ bool findDuplicate(int* row, int max, int target)
     return false;
 }
 
+/**
+ * Inserts a new edge into the graph.
+ *
+ * @param row The row of the graph where the edge will be inserted.
+ * @param max The maximum number of edges in the row.
+ * @param newEdge The new edge to be inserted.
+ */
 void insertEdge(int* row, int max, int newEdge)
 {
     for (int i = 0; i < max; i++)
@@ -36,6 +51,15 @@ void insertEdge(int* row, int max, int newEdge)
 }
 
 
+/**
+ * Generates a random connected network with the specified number of nodes and connections.
+ * 
+ * @param numNodes The number of nodes in the network.
+ * @param insertConnections The number of connections to insert into the network.
+ * @param index A pointer to the index array that will store the node indices.
+ * @param edges A pointer to the edges array that will store the connections between nodes.
+ * @return The number of connections successfully inserted into the network.
+ */
 int generateRandomConnectedNetwork(int numNodes, int insertConnections, int **index, int **edges) {
     if (numNodes < 2) {
         // A connected network is not possible with less than 2 nodes.

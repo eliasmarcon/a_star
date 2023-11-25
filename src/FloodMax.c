@@ -6,6 +6,12 @@
 
 #define TIMEOUT_MS 10 // Timeout in milliseconds
 
+/**
+ * Checks if a timeout has occurred.
+ *
+ * @param start The starting time of the operation.
+ * @return True if a timeout has occurred, false otherwise.
+ */
 bool check_timeout(clock_t start)
 {
     clock_t current_time = clock();
@@ -13,6 +19,20 @@ bool check_timeout(clock_t start)
     return elapsed_time_ms >= TIMEOUT_MS;
 }
 
+/**
+ * @brief Elects a leader among a group of processes using the FloodMax algorithm.
+ *
+ * This function elects a leader among a group of processes by implementing the FloodMax algorithm.
+ * The algorithm works by each process comparing its rank with its neighbors and passing the maximum
+ * rank to its neighbors until the maximum rank reaches all processes in the group. The process with
+ * the maximum rank is elected as the leader.
+ *
+ * @param rank The rank of the current process.
+ * @param size The total number of processes in the group.
+ * @param diameter The diameter of the communication network.
+ * @param leader A pointer to the variable that will store the elected leader's rank.
+ * @return The rank of the elected leader.
+ */
 int electLeader(int rank, int size, int diameter, volatile int *leader)
 {
     int calls = 0;

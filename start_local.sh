@@ -1,2 +1,2 @@
-make a_star
-mpirun --allow-run-as-root -np 5 ./out/a_star 5
+make all
+mpirun -np 1 ./out/mpi_a_star 20

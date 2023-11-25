@@ -35,12 +35,11 @@ int main(int argc, char** argv) {
 
     int sumCalls = 0;
     MPI_Reduce(&count, &sumCalls, 1, MPI_INT, MPI_SUM, leader, MPI_COMM_WORLD);
-
+    int** maze;
     if(rank == leader){
         // B) Server - Randomly Generate a graph (maze with one exit- point and one entrance at the borders of the maze) of size n by n ( n should be large )
 
-        int** maze = createMaze(n);
-        printMaze(maze, n); // TODO: remove
+        maze = createMaze(n);
 
         // C) Server - Split the graph into (about) equal size subgraphs and each subgraph contains entry & exit points (try to be efficient here, use the MST algorithm)
 
@@ -61,6 +60,12 @@ int main(int argc, char** argv) {
 
     // Finalize MPI
     MPI_Finalize();
+    if(rank == leader){
+        for (int i = 0; i < size; i++) {
+            free(maze[i]);
+        }
+        free(maze);
+    }
 
     return 0;
 }
