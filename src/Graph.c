@@ -121,3 +121,4 @@ void printGraph(int numNodes, int *index, int *edges) {
         printf("\n");
     }
 }
+

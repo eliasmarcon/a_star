@@ -1,4 +1,4 @@
-EXECS=mpi_distributed_bfs
+EXECS=mpi_a_star
 MPICC?=mpicc.mpich
 
 # Define the output directory
@@ -16,7 +16,7 @@ $(OUTDIR):
 
 all: ${EXECS}
 
-a_star: $(OUTDIR) $(SRC)
+mpi_a_star: $(OUTDIR) $(SRC)
 	${MPICC} -I$(INCLUDEDIR) -o $(OUTDIR)/$@ $(SRC)
 
 clean:
