@@ -46,8 +46,8 @@ void printMaze(int **maze, int size) {
                 printf("X");
             }
             else{
-                printf("%c", maze[x][y] ? '#' : ' '); // '#' for wall, ' ' for path
-                printf("%c", maze[x][y] ? '#' : ' '); // '#' for wall, ' ' for path
+                printf("%c", maze[x][y] ? '[' : ' '); // '#' for wall, ' ' for path
+                printf("%c", maze[x][y] ? ']' : ' '); // '#' for wall, ' ' for path
             }
         }
         printf("\n");
