@@ -176,7 +176,6 @@ void ensureExit(int **maze, int size) {
     for (int x = size-1; x >= 0; x--) {
         for (int y = 0; y < size; y++) {
             if (!maze[y][x]) {
-                printf("found path at x:%d, y:%d\n",x,y);
                 for(int i = x+1; i < size; i++){
                     maze[y][i] = 0;
                     return;
