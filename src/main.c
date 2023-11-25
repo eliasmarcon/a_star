@@ -37,6 +37,7 @@ int main(int argc, char** argv) {
     MPI_Reduce(&count, &sumCalls, 1, MPI_INT, MPI_SUM, leader, MPI_COMM_WORLD);
     int** maze;
     if(rank == leader){
+        printf("Leader is %d\n", leader);
         // B) Server - Randomly Generate a graph (maze with one exit- point and one entrance at the borders of the maze) of size n by n ( n should be large )
 
         maze = createMaze(n);
