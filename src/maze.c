@@ -149,7 +149,6 @@ void generateMaze(int **maze, int **visited, int y, int x, int size) {
     // Shuffle directions
     for (int i = 0; i < 4; i++) {
         int j = (int)(rand()) % 4;
-        printf("j:%d\n",j);
 
         int temp[2];
         temp[0] = dirs[i][0];
