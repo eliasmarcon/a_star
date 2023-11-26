@@ -4,7 +4,10 @@
 #include "cJSON.h"
 #include <math.h>
 
-#define UP 
+#define UP 0
+#define DOWN 1
+#define LEFT 2
+#define RIGHT 3
 
 /**
  * @brief Prints the children of a given node.
