@@ -5,6 +5,7 @@
 #include <mpi.h>
 #include "../include/FloodMax.h"
 #include "../include/Maze.h"
+#include "../include/Node.h"
 #define STANDARD_N 10
 
 int main(int argc, char** argv) {
@@ -41,9 +42,10 @@ int main(int argc, char** argv) {
         // B) Server - Randomly Generate a graph (maze with one exit- point and one entrance at the borders of the maze) of size n by n ( n should be large )
 
         maze = createMaze(n);
+        struct Node *mazeGraph = mazeToGraph(maze, n);
+        printNode(mazeGraph);
 
         // C) Server - Split the graph into (about) equal size subgraphs and each subgraph contains entry & exit points (try to be efficient here, use the MST algorithm)
-
         
         // D) Distribute subgraphs to different processors
     }

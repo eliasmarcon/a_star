@@ -17,7 +17,7 @@ $(OUTDIR):
 all: ${EXECS}
 
 mpi_a_star: $(OUTDIR) $(SRC)
-	${MPICC} -I$(INCLUDEDIR) -o $(OUTDIR)/$@ $(SRC)
+	${MPICC} -I$(INCLUDEDIR) -o $(OUTDIR)/$@ $(SRC) -lm -Ofast
 
 clean:
 	rm -f $(OUTDIR)/*

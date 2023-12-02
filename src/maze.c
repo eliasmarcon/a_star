@@ -138,7 +138,7 @@ int** createMaze(int size) {
     }
 
     // Set entry and exit
-    int entryX = rand() % size;
+    int entryX = (rand() % (size-2))+1;
     int entryY = 0; // Entry at left side
 
     generateMaze(maze, visited, entryY, entryX, size);
