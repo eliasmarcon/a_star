@@ -87,7 +87,7 @@ struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int pare
             neighboursCount++; // Increment valid neighbors count
         }
     }
-    printf("Node: %d, %d: Neighbours: %d\n", x, y, neighboursCount);
+    // printf("Node: %d, %d: Neighbours: %d\n", x, y, neighboursCount);
 
     // Allocate memory for edges to each valid neighbor
     thisNode->edgeCount = neighboursCount;

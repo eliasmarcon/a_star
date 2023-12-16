@@ -38,6 +38,7 @@ int main(int argc, char** argv) {
     MPI_Reduce(&count, &sumCalls, 1, MPI_INT, MPI_SUM, leader, MPI_COMM_WORLD);
     int** maze;
     if(rank == leader){
+        printf("I am rank %d and I am the leader\n", rank);
         printf("Leader is %d\n", leader);
         // B) Server - Randomly Generate a graph (maze with one exit- point and one entrance at the borders of the maze) of size n by n ( n should be large )
 
@@ -59,9 +60,9 @@ int main(int argc, char** argv) {
             printSubgraph(subgraphs[i],i);
         }
         int totalNodesCount = totalNodes(mazeGraph);
+        printf("Total nodes: %d, Subgraph nodes: %d\n", totalNodesCount, nodes);
         if(nodes != totalNodesCount){
             printf("Error: Subgraphs do not contain all nodes\n");
-            printf("Total nodes: %d, Subgraph nodes: %d\n", totalNodesCount, nodes);
             return 1;
         }
 
