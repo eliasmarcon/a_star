@@ -43,11 +43,32 @@ int main(int argc, char** argv) {
 
         maze = createMaze(n);
         struct Node *mazeGraph = mazeToGraph(maze, n);
-        printNode(mazeGraph);
+        // printNode(mazeGraph);
 
         // C) Server - Split the graph into (about) equal size subgraphs and each subgraph contains entry & exit points (try to be efficient here, use the MST algorithm)
         
+        // our graph already is a MST as we generated our maze without cycles
+
+
+        // Split MST into subgraphs
+        struct Node** subgraphs =  splitTree(mazeGraph, size);
+        int nodes = 0;
+        for (int i = 0; i < size; i++) {
+            printf("Subgraph %d:\n", i);
+            nodes += totalSubgraphNodes(subgraphs[i],i);
+            printSubgraph(subgraphs[i],i);
+        }
+        int totalNodesCount = totalNodes(mazeGraph);
+        if(nodes != totalNodesCount){
+            printf("Error: Subgraphs do not contain all nodes\n");
+            printf("Total nodes: %d, Subgraph nodes: %d\n", totalNodesCount, nodes);
+            return 1;
+        }
+
+
         // D) Distribute subgraphs to different processors
+
+        free(subgraphs);
     }
 
 

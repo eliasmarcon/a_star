@@ -1,2 +1,2 @@
 make all
-mpirun -np 5 ./out/mpi_a_star 31
+mpirun -np 3 ./out/mpi_a_star 20
