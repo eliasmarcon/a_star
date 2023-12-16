@@ -45,52 +45,94 @@ int isValidCoordinate(int x, int y, int n) {
     return x >= 0 && x < n && y >= 0 && y < n;
 }
 
-struct Node* getNeigbours(int ** maze, int x,int y, int * exit, int n, int parentDirection) {
+int inverseDirection(int direction){
+    if(direction == UP){
+        return DOWN;
+    }else if(direction == DOWN){
+        return UP;
+    }else if(direction == LEFT){
+        return RIGHT;
+    }else if(direction == RIGHT){
+        return LEFT;
+    }
+    return -1;
+}
+
+struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int parentDirection) {
+    
+    // Allocate memory for a new node and initialize its properties
     struct Node * thisNode = (struct Node*)malloc(sizeof(struct Node));
-    thisNode->metric = calculateEucledianDistance(x, y, exit);
-    thisNode->subgraph = -1;
-    thisNode->x = x;
-    thisNode->y = y;
+    thisNode->metric = calculateEucledianDistance(x, y, exit); // Calculate the Euclidean distance to the exit
+    thisNode->subgraph = -1; // Initialize subgraph identifier
+    thisNode->x = x; // Set the node's x-coordinate
+    thisNode->y = y; // Set the node's y-coordinate
+
+    // Check if the current position is the exit
     if(exit[0] == y && exit[1] == x){
-        thisNode->edgeCount = 0;
+        thisNode->edgeCount = 0; // If it's the exit, there are no outgoing edges
         return thisNode;
     }
+
+    // Count the number of valid neighbors
     int neighboursCount = 0;
-    bool neighDirection[4] = {false, false, false, false};
+    bool neighDirection[4] = {false, false, false, false}; // Direction flags for each neighbor
     for (int i = 0; i < 4; i++) {
         if(i == parentDirection){
-            continue;
+            continue; // Skip the parent direction to prevent backtracking
         }
-        int newX = x + neighboursHelper[i][0];
-        int newY = y + neighboursHelper[i][1];
-        if (newX >= 0 && newX < n && newY >= 0 && newY < n && maze[newY][newX] == 0) {
-            neighDirection[i] = true;
-            neighboursCount++;
+        int newX = x + neighboursHelper[i][0]; // Calculate new x-coordinate for the neighbor
+        int newY = y + neighboursHelper[i][1]; // Calculate new y-coordinate for the neighbor
+        if (isValidCoordinate(newX, newY, n) && maze[newY][newX] == 0) { // Check if the neighbor is within bounds and passable
+            neighDirection[i] = true; // Mark direction as valid
+            neighboursCount++; // Increment valid neighbors count
         }
     }
+    printf("Node: %d, %d: Neighbours: %d\n", x, y, neighboursCount);
+
+    // Allocate memory for edges to each valid neighbor
     thisNode->edgeCount = neighboursCount;
     thisNode->edges = (struct Edge**)malloc(sizeof(struct Edge*) * thisNode->edgeCount);
+
+    // Iterate through each direction to establish edges to neighbors
     int edgeIndex = 0;
     for(int direction = 0; direction < 4; direction++){
         if(!neighDirection[direction]){
-            continue;
+            continue; // Skip if the direction is not valid
         }
-        int weight = 0;
-        int newX = x;
-        int newY = y;
+        int weight = 0; // Initialize the weight of the edge
+        int newX = x; // Start from the current x-coordinate
+        int newY = y; // Start from the current y-coordinate
         
-        //follow the path to the next crossing
+        // Follow the path in the current direction until a turn or intersection
         int newXTemp, newYTemp;
-        do{
-            newXTemp = newX + neighboursHelper[direction][0];
-            newYTemp = newY + neighboursHelper[direction][1];
-            if (isValidCoordinate(newXTemp, newYTemp, n) && maze[newYTemp][newXTemp] == 0) {
-                weight++;
-                newX = newXTemp;
-                newY = newYTemp;
+        int otherNeighbours = 0;
+        do {
+            newXTemp = newX + neighboursHelper[direction][0]; // Calculate next x-coordinate
+            newYTemp = newY + neighboursHelper[direction][1]; // Calculate next y-coordinate
+            if (isValidCoordinate(newXTemp, newYTemp, n) && maze[newYTemp][newXTemp] == 0) { // Check if next position is valid and passable
+                //Check if new coordinate has neighbors in other directions
+                weight++; // Increment the weight
+
+                newX = newXTemp; // Update x-coordinate
+                newY = newYTemp; // Update y-coordinate
+
+                // Count the number of valid neighbors
+                for (int i = 0; i < 4; i++) {
+                    if(i == direction || i == inverseDirection(direction)){
+                        continue; // Skip the parent direction to prevent backtracking
+                    }
+                    int newX = newXTemp + neighboursHelper[i][0]; // Calculate new x-coordinate for the neighbor
+                    int newY = newYTemp + neighboursHelper[i][1]; // Calculate new y-coordinate for the neighbor
+                    if (isValidCoordinate(newX, newY, n) && maze[newY][newX] == 0) { // Check if the neighbor is within bounds and passable
+                        otherNeighbours++; // Increment valid neighbors count
+                    }
+                }
+                // printf("Path: %d, %d: Neighbours: %d\n", newX, newY, otherNeighbours);
+
             }
-        }while(isValidCoordinate(newXTemp, newYTemp, n) && maze[newYTemp][newXTemp] == 0);
-        // invert the direction of the edge to get the new parentDirection
+        } while(isValidCoordinate(newXTemp, newYTemp, n) && maze[newYTemp][newXTemp] == 0 && otherNeighbours == 0); // Continue until a non-passable cell is reached
+
+        // Determine the opposite direction to prevent backtracking in the recursive call
         int newParentDirection;
         if(direction == UP){
             newParentDirection = DOWN;
@@ -101,17 +143,18 @@ struct Node* getNeigbours(int ** maze, int x,int y, int * exit, int n, int paren
         }else if(direction == RIGHT){
             newParentDirection = LEFT;
         }
-        // add neighbour to the node / add an edge with the weight of the distance to the crossing
 
-        // recursively call getNeigbours with the new coordinates and the new parentDirection
+        // Recursively explore the neighbor node
         struct Node* neighbour = getNeigbours(maze, newX, newY, exit, n, newParentDirection);
+
+        // Create an edge to the neighbor and assign its weight and destination node
         thisNode->edges[edgeIndex] = (struct Edge*)malloc(sizeof(struct Edge));
         thisNode->edges[edgeIndex]->weight = weight;
         thisNode->edges[edgeIndex]->node = neighbour;
-        edgeIndex++;
+        edgeIndex++; // Move to the next edge index
     }
 
-    return thisNode;
+    return thisNode; // Return the constructed node with its edges
 }
 
 
