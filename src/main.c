@@ -8,12 +8,12 @@
 #include "../include/Node.h"
 #define STANDARD_N 10
 
-void printMatrix(int** matrix, int size){
+void printMatrix(int** matrix, int rows, int cols){
     
     printf("Matrix:\n");
     printf("         | ");
     int dashes = 11;
-    for(int i = 0; i < size; i++){
+    for(int i = 0; i < cols; i++){
         printf("%3d ", i);
         dashes += 4;	
     }
@@ -22,9 +22,9 @@ void printMatrix(int** matrix, int size){
         printf("-");
     }
     printf("\n");
-    for(int i = 0; i < size; i++){
+    for(int i = 0; i < rows; i++){
         printf("Row %3d: | ", i);
-        for(int j = 0; j < size; j++){
+        for(int j = 0; j < cols; j++){
             printf("%3d ", matrix[i][j]);
         }
         printf("\n");
@@ -61,9 +61,13 @@ int main(int argc, char** argv) {
     int sumCalls = 0;
     MPI_Reduce(&count, &sumCalls, 1, MPI_INT, MPI_SUM, leader, MPI_COMM_WORLD);
     int** maze;
+    int rows = 0;
+    int totalNodesCount;
+    int batchSize;
+    int ** matrix;
+    //printf("Leader is %d\n", leader);
     if(rank == leader){
         printf("I am rank %d and I am the leader\n", rank);
-        printf("Leader is %d\n", leader);
         // B) Server - Randomly Generate a graph (maze with one exit- point and one entrance at the borders of the maze) of size n by n ( n should be large )
 
         maze = createMaze(n);
@@ -74,38 +78,80 @@ int main(int argc, char** argv) {
         
         // our graph already is a MST as we generated our maze without cycles
 
-
-        // Split MST into subgraphs
-        /*
-        struct Node** subgraphs =  splitTree(mazeGraph, size);
-        int nodes = 0;
-        for (int i = 0; i < size; i++) {
-            printf("Subgraph %d:\n", i);
-            nodes += totalSubgraphNodes(subgraphs[i],i);
-            printSubgraph(subgraphs[i],i);
-        }
-        int totalNodesCount = totalNodes(mazeGraph);
-        printf("Total nodes: %d, Subgraph nodes: %d\n", totalNodesCount, nodes);
-        if(nodes != totalNodesCount){
-            printf("Error: Subgraphs do not contain all nodes\n");
-            return 1;
-        }
-        */
-        int totalNodesCount = totalNodes(mazeGraph);
-        int ** matrix = (int**) malloc(totalNodesCount * sizeof(int *));
+        // create adjacency matrix
+        totalNodesCount = totalNodes(mazeGraph);
+        matrix = (int**) malloc(totalNodesCount * sizeof(int *));
         for(int i = 0; i < totalNodesCount; i++){
             matrix[i] = (int*) calloc(totalNodesCount, sizeof(int));
         }
         buildAdjacencyMatrix(mazeGraph, matrix);
         
         // print matrix
-        printMatrix(matrix, totalNodesCount);
+        printMatrix(matrix, totalNodesCount, totalNodesCount);
+
 
 
         // D) Distribute subgraphs to different processors
+        batchSize = (int)(totalNodesCount / size);
+        //calculate how many rows the leader has to do
+        rows = (totalNodesCount % size) + batchSize;
 
         //free(subgraphs);
     }
+    MPI_Request *barrier = malloc(sizeof(MPI_Request));
+    MPI_Ibarrier(MPI_COMM_WORLD, barrier);
+    MPI_Wait(barrier, MPI_STATUS_IGNORE);
+    MPI_Bcast(&batchSize, 1, MPI_INT, leader, MPI_COMM_WORLD);
+    if(rank != leader){
+        rows = batchSize;
+    }
+    //printf("Rank %d will process %d rows of the adjency matrix\n", rank, rows);
+    MPI_Bcast(&totalNodesCount, 1, MPI_INT, leader, MPI_COMM_WORLD);
+    int ** partMatrix = (int**) malloc(rows * sizeof(int *));
+    for(int i = 0; i < rows; i++){
+        partMatrix[i] = (int*) calloc(totalNodesCount, sizeof(int));
+    }
+    //printf("Rank %d has allocated matrix with %d rows and %d cols\n", rank, rows, totalNodesCount);
+    MPI_Ibarrier(MPI_COMM_WORLD, barrier);
+    MPI_Wait(barrier, MPI_STATUS_IGNORE);
+    MPI_Datatype row_type;
+    MPI_Type_contiguous(totalNodesCount, MPI_INT, &row_type);
+    MPI_Type_commit(&row_type);
+    if(rank != leader){
+        // receive full matrix
+        printf("Rank %d is waiting for %d rows from rank %d\n", rank, rows, leader);
+        MPI_Recv(&(partMatrix[0][0]), (batchSize+1)*totalNodesCount, MPI_INT, leader, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("Rank %d has received %d rows from rank %d\n", rank, rows, leader);
+    }
+    if(rank == leader){
+        
+        int otherNode = -1;
+        sleep(1);
+        for(int i = 0; i < size; ++i){
+            if(i == leader){
+                continue;
+            }
+            // Check if the index is within the matrix bounds
+            MPI_Send(0, 0, MPI_INT, i, 0, MPI_COMM_WORLD);
+            MPI_Send(&(matrix[rows + (batchSize* i)][0]), (batchSize+1)*totalNodesCount, MPI_INT, i, 0, MPI_COMM_WORLD);
+
+            printf("Rank %d has sent %d rows to rank %d\n", rank, batchSize,i);
+        }
+        // set the part of the matrix that the leader has to process
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < totalNodesCount; j++){
+                partMatrix[i][j] = matrix[i][j];
+            }
+        }
+    }
+    MPI_Ibarrier(MPI_COMM_WORLD, barrier);
+    MPI_Wait(barrier, MPI_STATUS_IGNORE);
+    MPI_Type_free(&row_type);
+    printf("Rank %d has received the matrix:\n", rank);
+    printMatrix(partMatrix, rows, totalNodesCount);
+
+    //MPI_Send(&matrix[0][0], totalNodesCount * totalNodesCount, MPI_INT, i, 0, MPI_COMM_WORLD);
+    
 
 
     // E) Each subgraph constructs the path from its entry points to its exit points
@@ -124,8 +170,17 @@ int main(int argc, char** argv) {
         for (int i = 0; i < size; i++) {
             free(maze[i]);
         }
+        for(int i = 0; i < totalNodesCount; i++){
+            free(matrix[i]);
+        }
+        free(matrix);
         free(maze);
     }
+    for(int i = 0; i < rows; i++){
+        free(partMatrix[i]);
+    }
+    free(partMatrix);
+    free(barrier);
 
     return 0;
 }
