@@ -13,7 +13,7 @@
 const int neighboursHelper[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // up, down, left, right
 
 
-struct Node* getNeigbours(int ** maze, int x,int y, int * exit, int n, int parentDirection);
+struct Node* getNeigbours(int ** maze, int x,int y, int * exit, int n, int parentDirection, int * id);
 
 float calculateEucledianDistance(int x, int y, int * exit) {
     int dx = exit[1] - x;
@@ -37,7 +37,8 @@ struct Node* mazeToGraph(int **maze, int n) {
     }
     int exit[2] = { exitY,n - 1 };
     printf("Exit: %d, %d\n", exit[1], exit[0]);
-    struct Node* entry = getNeigbours(maze, 0, entryY, (int *)&exit, n, 2);
+    int id = 0;
+    struct Node* entry = getNeigbours(maze, 0, entryY, (int *)&exit, n, 2, &id);
     return entry;
 }
 
@@ -58,14 +59,16 @@ int inverseDirection(int direction){
     return -1;
 }
 
-struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int parentDirection) {
+struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int parentDirection, int * id) {
     
     // Allocate memory for a new node and initialize its properties
     struct Node * thisNode = (struct Node*)malloc(sizeof(struct Node));
     thisNode->metric = calculateEucledianDistance(x, y, exit); // Calculate the Euclidean distance to the exit
-    thisNode->subgraph = -1; // Initialize subgraph identifier
+    //thisNode->subgraph = -1; // Initialize subgraph identifier
     thisNode->x = x; // Set the node's x-coordinate
     thisNode->y = y; // Set the node's y-coordinate
+    thisNode->id = *id; // Set the node's id
+    ++(*id); // Increment the id counter
 
     // Check if the current position is the exit
     if(exit[0] == y && exit[1] == x){
@@ -133,19 +136,10 @@ struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int pare
         } while(isValidCoordinate(newXTemp, newYTemp, n) && maze[newYTemp][newXTemp] == 0 && otherNeighbours == 0); // Continue until a non-passable cell is reached
 
         // Determine the opposite direction to prevent backtracking in the recursive call
-        int newParentDirection;
-        if(direction == UP){
-            newParentDirection = DOWN;
-        }else if(direction == DOWN){
-            newParentDirection = UP;
-        }else if(direction == LEFT){
-            newParentDirection = RIGHT;
-        }else if(direction == RIGHT){
-            newParentDirection = LEFT;
-        }
+        int newParentDirection = inverseDirection(direction);
 
         // Recursively explore the neighbor node
-        struct Node* neighbour = getNeigbours(maze, newX, newY, exit, n, newParentDirection);
+        struct Node* neighbour = getNeigbours(maze, newX, newY, exit, n, newParentDirection, id);
 
         // Create an edge to the neighbor and assign its weight and destination node
         thisNode->edges[edgeIndex] = (struct Edge*)malloc(sizeof(struct Edge));
@@ -160,15 +154,33 @@ struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int pare
 
 void printNode(struct Node *node)
 {
-    printf("Node (%d,%d) - Metric: %.2f\n",node->x,node->y, node->metric);
+    printf("Node %d (%d,%d) - Metric: %.2f\n",node->id,node->x,node->y, node->metric);
     for(int i = 0; i < node->edgeCount; i++){
-        printf("\tEdge %d - Weight: %d, Node: (%d,%d)\n", i, node->edges[i]->weight, node->edges[i]->node->x, node->edges[i]->node->y);
+        printf("\tEdge %d - Weight: %d, Node %d: (%d,%d)\n", i, node->edges[i]->weight, node->edges[i]->node->id,node->edges[i]->node->x, node->edges[i]->node->y);
     }
     for(int i = 0; i < node->edgeCount; i++){
         printNode(node->edges[i]->node);
     }
 }
 
+int totalNodes(struct Node *root) {
+    int count = 1; // Count this node
+    for (int i = 0; i < root->edgeCount; ++i) {
+        count += totalNodes(root->edges[i]->node);
+    }
+    return count;
+}
+
+void buildAdjacencyMatrix(struct Node * node, int ** matrix){
+    for(int edgeIndex = 0; edgeIndex < node->edgeCount; edgeIndex++){
+        matrix[node->id][node->edges[edgeIndex]->node->id] = node->edges[edgeIndex]->weight;
+        matrix[node->edges[edgeIndex]->node->id][node->id] = node->edges[edgeIndex]->weight;
+        buildAdjacencyMatrix(node->edges[edgeIndex]->node, matrix);
+    }
+}
+
+
+/*
 void printSubgraph(struct Node *node,int id)
 {
     if(node->subgraph != id) return;
@@ -182,14 +194,6 @@ void printSubgraph(struct Node *node,int id)
     }
 }
 
-
-int totalNodes(struct Node *root) {
-    int count = 1; // Count this node
-    for (int i = 0; i < root->edgeCount; ++i) {
-        count += totalNodes(root->edges[i]->node);
-    }
-    return count;
-}
 
 int totalSubgraphNodes(struct Node *root,int id) {
     if(root->subgraph != id) return 0;
@@ -262,7 +266,7 @@ struct Node** splitTree(struct Node *root, int n) {
 
     return subgraphRoots;
 }
-
+*/
 
 
 

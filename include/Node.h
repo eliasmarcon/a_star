@@ -5,14 +5,15 @@
 #include <stdlib.h>
 
 
-// struct Node
-// {
-//     float metric;
-//     int edgeCount;
-//     struct Edge **edges;
-//     int x;
-//     int y;
-// };
+ struct Node
+ {
+     float metric;
+     int edgeCount;
+     struct Edge **edges;
+     int x;
+     int y;
+     int id;
+ };
 
 struct Edge
 {
@@ -20,7 +21,7 @@ struct Edge
     struct Node *node;
 };
 
-struct Node {
+/*struct Node {
     float metric;
     int edgeCount;
     struct Edge **edges;
@@ -28,12 +29,17 @@ struct Node {
     int visited;
     int subgraph;
     int isSubgraphRoot; // New field to indicate if the node is a subgraph root
-};
+};*/
 
 struct Node* mazeToGraph(int **maze, int n);
 void printNode(struct Node *node);
+int totalNodes(struct Node *root);
+
+void buildAdjacencyMatrix(struct Node * node, int ** matrix);
+
+/*
 void printSubgraph(struct Node *node,int id);
 struct Node** splitTree(struct Node *root, int n);
-int totalNodes(struct Node *root);
 int totalSubgraphNodes(struct Node *root,int id);
+*/
 #endif /* node_h */

@@ -8,6 +8,30 @@
 #include "../include/Node.h"
 #define STANDARD_N 10
 
+void printMatrix(int** matrix, int size){
+    
+    printf("Matrix:\n");
+    printf("         | ");
+    int dashes = 11;
+    for(int i = 0; i < size; i++){
+        printf("%3d ", i);
+        dashes += 4;	
+    }
+    printf("\n");
+    for(int i = 0; i < dashes; i++) {
+        printf("-");
+    }
+    printf("\n");
+    for(int i = 0; i < size; i++){
+        printf("Row %3d: | ", i);
+        for(int j = 0; j < size; j++){
+            printf("%3d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+
 int main(int argc, char** argv) {
     // Initialize MPI
     MPI_Init(&argc, &argv);
@@ -44,7 +68,7 @@ int main(int argc, char** argv) {
 
         maze = createMaze(n);
         struct Node *mazeGraph = mazeToGraph(maze, n);
-        // printNode(mazeGraph);
+        printNode(mazeGraph);
 
         // C) Server - Split the graph into (about) equal size subgraphs and each subgraph contains entry & exit points (try to be efficient here, use the MST algorithm)
         
@@ -52,6 +76,7 @@ int main(int argc, char** argv) {
 
 
         // Split MST into subgraphs
+        /*
         struct Node** subgraphs =  splitTree(mazeGraph, size);
         int nodes = 0;
         for (int i = 0; i < size; i++) {
@@ -65,11 +90,21 @@ int main(int argc, char** argv) {
             printf("Error: Subgraphs do not contain all nodes\n");
             return 1;
         }
+        */
+        int totalNodesCount = totalNodes(mazeGraph);
+        int ** matrix = (int**) malloc(totalNodesCount * sizeof(int *));
+        for(int i = 0; i < totalNodesCount; i++){
+            matrix[i] = (int*) calloc(totalNodesCount, sizeof(int));
+        }
+        buildAdjacencyMatrix(mazeGraph, matrix);
+        
+        // print matrix
+        printMatrix(matrix, totalNodesCount);
 
 
         // D) Distribute subgraphs to different processors
 
-        free(subgraphs);
+        //free(subgraphs);
     }
 
 
