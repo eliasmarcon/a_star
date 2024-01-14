@@ -5,7 +5,18 @@
         "vscode": {
             "settings": { 
                 "terminal.integrated.shell.linux": "/bin/bash"
-            }
+            },
+            "extensions": [
+                "ms-vscode.cpptools-extension-pack",
+                "bierner.markdown-mermaid",
+                "jeff-hykin.better-cpp-syntax",
+                "ms-vsliveshare.vsliveshare",
+                "ms-vscode.makefile-tools",
+                "yzhang.markdown-all-in-one",
+                "davidanson.vscode-markdownlint",
+                "gruntfuggly.todo-tree",
+                "esbenp.prettier-vscode"
+            ]
         }
     },
     // "forwardPorts": [8080], // Uncomment or modify if port forwarding is needed
