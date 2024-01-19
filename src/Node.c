@@ -1,4 +1,6 @@
 #include "Node.h"
+#include "Map.h"
+#include "PriorityQueue.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -177,6 +179,81 @@ void buildAdjacencyMatrix(struct Node * node, int ** matrix){
         matrix[node->edges[edgeIndex]->node->id][node->id] = node->edges[edgeIndex]->weight;
         buildAdjacencyMatrix(node->edges[edgeIndex]->node, matrix);
     }
+}
+
+
+struct Node *a_star(struct Node *start, struct Node *goal, int size) {
+    struct PriorityQueue openSet;
+    initializePriorityQueue(&openSet, size); 
+    insertWithPriority(&openSet, start, start->metric);
+
+    Map gScore;
+    initializeMap(&gScore);
+    setMapValue(&gScore, start, 0);
+
+    Map parentMap;
+    initializeMap(&parentMap);
+
+    while (!isEmpty(&openSet)) {
+        struct Node *current = popLowest(&openSet);
+
+        if (current == goal) {
+            // Path found, reconstruct and return it
+            struct Node *path = reconstructPath(&parentMap, goal, size);
+            // Free resources
+            free(openSet.elements);
+            // Return the path
+            return path;
+        }
+
+        for (int i = 0; i < current->edgeCount; i++) {
+            struct Node *neighbor = current->edges[i]->node;
+            float tentative_gScore = getMapValue(&gScore, current) + current->edges[i]->weight;
+
+            if (tentative_gScore < getMapValue(&gScore, neighbor)) {
+                setMapParent(&parentMap, neighbor, current);
+                setMapValue(&gScore, neighbor, tentative_gScore);
+                float fScore = tentative_gScore + neighbor->metric;
+
+                if (!contains(&openSet, neighbor)) {
+                    insertWithPriority(&openSet, neighbor, fScore);
+                }
+            }
+        }
+    }
+
+    // Free resources
+    free(openSet.elements);
+    // No path found
+    return NULL;
+}
+
+
+struct Node* reconstructPath(NodeMap *parentMap, struct Node *current, int pathCapacity) {
+    // Initialize an array or list to store the path
+    struct Node** path = (struct Node**)malloc(sizeof(struct Node*) * pathCapacity);
+    int pathSize = 0;
+
+    // Trace back the path from goal to start
+    while (current != NULL) {
+        if (pathSize >= pathCapacity) {
+            // Increase the path capacity
+            pathCapacity *= 2;
+            path = (struct Node**)realloc(path, sizeof(struct Node*) * pathCapacity);
+        }
+        path[pathSize++] = current;
+        current = getNodeMapValue(parentMap, current);
+    }
+
+    // Reverse the path as it is currently from goal to start
+    for (int i = 0; i < pathSize / 2; i++) {
+        struct Node* temp = path[i];
+        path[i] = path[pathSize - 1 - i];
+        path[pathSize - 1 - i] = temp;
+    }
+
+    // Return the path array and its size (if needed)
+    return path; // You might also want to return the path size
 }
 
 
