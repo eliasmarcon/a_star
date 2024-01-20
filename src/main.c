@@ -65,42 +65,47 @@ int main(int argc, char** argv) {
     int totalNodesCount;
     int batchSize;
     int ** matrix;
-    //printf("Leader is %d\n", leader);
+    
     if(rank == leader){
+        printf("======================= Leader Election ===============================\n");
         printf("I am rank %d and I am the leader\n", rank);
         // B) Server - Randomly Generate a graph (maze with one exit- point and one entrance at the borders of the maze) of size n by n ( n should be large )
 
+        printf("======================= Maze Generation ===============================\n");
         maze = createMaze(n);
+
+        printMaze(maze, n);
+
         struct Node *exitNode = malloc(sizeof(struct Node));
         struct Node *mazeGraph = mazeToGraph(maze, n, exitNode);
-        // printNode(mazeGraph);
+
+        printf("==================== Graph Representation ============================\n");
+
+        printNode(mazeGraph);
 
         // C) Server - Split the graph into (about) equal size subgraphs and each subgraph contains entry & exit points (try to be efficient here, use the MST algorithm)
         
         // our graph already is a MST as we generated our maze without cycles
 
-        // create adjacency matrix
         totalNodesCount = totalNodes(mazeGraph);
-        // matrix = (int**) malloc(totalNodesCount * sizeof(int *));
-        // for(int i = 0; i < totalNodesCount; i++){
-        //     matrix[i] = (int*) calloc(totalNodesCount, sizeof(int));
-        // }
-        // buildAdjacencyMatrix(mazeGraph, matrix);
-        
-        // print matrix
-        // printMatrix(matrix, totalNodesCount, totalNodesCount);
+        matrix = (int**) malloc(totalNodesCount * sizeof(int *));
+        for(int i = 0; i < totalNodesCount; i++){
+            matrix[i] = (int*) calloc(totalNodesCount, sizeof(int));
+        }
 
-
+        buildAdjacencyMatrix(mazeGraph, matrix);
 
         // D) Distribute subgraphs to different processors
-        // batchSize = (int)(totalNodesCount / size);
-        // calculate how many rows the leader has to do
-        // rows = (totalNodesCount % size) + batchSize;
 
-        // free(subgraphs);
+        // This didn't work out for us, so we run the algorithm on the entire maze on the leader
 
         int pathLength;
-        struct Node** path = a_star(mazeGraph, exitNode, totalNodesCount, &pathLength); // '5' is the size of your graph
+        struct Node** path = a_star(mazeGraph, exitNode, totalNodesCount, &pathLength); 
+
+        printf("======================= A Star Path ===============================\n");
+
+        printf("Path found by a star: \n");
+
         printPath(path, pathLength);
     }
 

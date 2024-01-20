@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "cJSON.h"
 #include <math.h>
 
 #define UP 0
@@ -38,6 +37,7 @@ struct Node* mazeToGraph(int **maze, int n, struct Node* exitNode) {
         }
     }
     int exit[2] = { exitY,n - 1 };
+    printf("Entry: %d, %d\n", 0, entryY);
     printf("Exit: %d, %d\n", exit[1], exit[0]);
     int id = 0;
     struct Node* entry = getNeigbours(maze, 0, entryY, (int *)&exit, n, 2, &id, exitNode);
@@ -186,7 +186,7 @@ void buildAdjacencyMatrix(struct Node * node, int ** matrix){
 
 
 struct Node** reconstructPath(NodeMap *parentMap, struct Node *current, int pathCapacity, int *pathLength) {
-    *pathLength = 0; // Ensure pathLength is initialized to 0
+    *pathLength = 0;
     struct Node** path = (struct Node**)malloc(sizeof(struct Node*) * pathCapacity);
 
     // Backtrack from goal to start
@@ -197,10 +197,8 @@ struct Node** reconstructPath(NodeMap *parentMap, struct Node *current, int path
             path = (struct Node**)realloc(path, sizeof(struct Node*) * pathCapacity);
         }
         path[*pathLength] = current;
-        (*pathLength)++; // Increment the path length
-        // printf("Node %d: (%d, %d)\n", current->id, current->x, current->y);
-        current = getNodeMapValue(parentMap, current); // Move to the parent of the current node
-        // printf("Node %d: (%d, %d)\n", current->id, current->x, current->y);
+        (*pathLength)++; 
+        current = getNodeMapValue(parentMap, current); 
     }
 
     // Reverse the path
@@ -219,8 +217,6 @@ struct Node** a_star(struct Node *start, struct Node *goal, int size, int *pathL
     struct PriorityQueue openSet;
     initializePriorityQueue(&openSet, size); 
     insertWithPriority(&openSet, start, start->metric);
-    printf("Start: %d, %d\n", start->x, start->y);
-    printf("Metric: %.2f\n", start->metric);
 
     FloatMap gScore;
     initializeFloatMap(&gScore, size);
@@ -266,146 +262,9 @@ void printPath(struct Node** path, int pathLength) {
     printf("Path (length = %d):\n", pathLength);
     for (int i = 0; i < pathLength; i++) {
         if (path[i] != NULL) {
-            // Assuming each node has 'x', 'y', and 'id' attributes
             printf("Node %d: (%d, %d)\n", path[i]->id, path[i]->x, path[i]->y);
         } else {
             printf("NULL Node encountered in path.\n");
         }
     }
 }
-
-
-
-/*
-void printSubgraph(struct Node *node,int id)
-{
-    if(node->subgraph != id) return;
-    printf("Node (%d,%d) - Metric: %.2f\n",node->x,node->y, node->metric);
-    for(int i = 0; i < node->edgeCount; i++){
-        printf("\tEdge %d - Weight: %d, Node: (%d,%d)\n", i, node->edges[i]->weight, node->edges[i]->node->x, node->edges[i]->node->y);
-    }
-    
-    for(int i = 0; i < node->edgeCount; i++){
-        printSubgraph(node->edges[i]->node, id);
-    }
-}
-
-
-int totalSubgraphNodes(struct Node *root,int id) {
-    if(root->subgraph != id) return 0;
-    int count = 1; // Count this node
-    for (int i = 0; i < root->edgeCount; ++i) {
-        count += totalSubgraphNodes(root->edges[i]->node, id);
-    }
-    return count;
-}
-
-void dfs(struct Node *node, int *targetSize, int *currentSize, int *subgraphId, struct Node **subgraphRoots) {
-    // We are a root node either if we are the first node or have more children than space in the subgraph
-    if ((*currentSize == 0 )|| (*currentSize + node->edgeCount > *targetSize)){
-        *currentSize = 0;
-        node->isSubgraphRoot = 1;
-        subgraphRoots[--(*subgraphId)] = node;
-    } else {
-        node->isSubgraphRoot = 0;
-    }
-    
-    // add node to subgraph
-    node->subgraph = *subgraphId;
-    *currentSize += 1;
-    
-    if(*currentSize >= *targetSize){
-        // Check if childern are leaves and append them to the subgraph
-        // for (int i = 0; i < node->edgeCount; ++i) {
-        //     if(node->edges[i]->node->edgeCount == 0){
-        //         node->edges[i]->node->isSubgraphRoot = 0;
-        //         node->edges[i]->node->subgraph = *subgraphId;
-        //         (*currentSize)++;
-        //     }
-        // }
-        if(subgraphId > 0){
-            *currentSize = 0;
-        }
-    }
-    // Continue DFS recursively
-    for (int i = 0; i < node->edgeCount; ++i) {
-        // Skip if already in a subgraph
-        if(node->edges[i]->node->subgraph != -1){
-            continue;
-        }
-        dfs(node->edges[i]->node, targetSize, currentSize, subgraphId, subgraphRoots);
-    }
-}
-
-
-struct Node** splitTree(struct Node *root, int n) {
-    int total = totalNodes(root);
-    printf("Total: %d\n", total);
-    int targetSize = (total + n - 1) / n;
-    printf("Target: %d\n", targetSize);
-    int currentSize = 0;
-    // first rootNode decrements subgraphId to n-1
-    int subgraphId = n;
-
-    struct Node **subgraphRoots = (struct Node**)malloc(n * sizeof(struct Node*));
-    if (subgraphRoots == NULL) {
-        // Handle memory allocation error
-        return NULL;
-    }
-
-    dfs(root, &targetSize, &currentSize, &subgraphId, subgraphRoots);
-
-    // Handle case where the last subgraph is incomplete
-    // if (currentSize > 0 && subgraphId < n - 1) {
-    //     subgraphId++;
-    // }
-
-    return subgraphRoots;
-}
-*/
-
-
-
-// Add your function to reset 'visited' flag and other helper functions as needed
-
-
-// struct Node** roots = splitTree(rootNode, numberOfSubgraphs);
-// // Use the roots array as needed
-// // ...
-
-// // Remember to free the roots array when done
-// free(roots);
-
-
-// // Check if starting a new subgraph
-//     if(*currentSize >= (targetSize - node->edgeCount)){
-//         (*subgraphId)++;
-//         node->isSubgraphRoot = 1;
-//         subgraphRoots[*subgraphId] = node;
-//         *currentSize = 1;
-//     }
-//     else{
-//         if (*currentSize == 0) {
-//             node->isSubgraphRoot = 1;
-//             subgraphRoots[*subgraphId] = node;
-//         } else {
-//             node->isSubgraphRoot = 0;
-//         }
-        
-//         node->subgraph = *subgraphId;
-//         *currentSize += 1;
-
-//         // If current subgraph has reached target size, prepare for next subgraph
-//         if (*currentSize == targetSize) {
-//             printf("Subgraph %d: %d\n", *subgraphId, *currentSize);
-//             *currentSize = 0;
-//             (*subgraphId)++;
-//         }
-//     }
-
-
-
-//     // Continue DFS
-//     for (int i = 0; i < node->edgeCount; ++i) {
-//         dfs(node->edges[i]->node, targetSize, currentSize, subgraphId, subgraphRoots);
-//     }

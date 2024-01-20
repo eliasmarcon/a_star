@@ -155,7 +155,6 @@ int** createMaze(int size) {
         free(visited[i]);
     }
     free(visited);
-
-    printMaze(maze, size);
+    
     return maze;
 }
