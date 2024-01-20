@@ -58,3 +58,12 @@ struct Node* popLowest(struct PriorityQueue *pq) {
 bool isEmpty(struct PriorityQueue *pq) {
     return pq->size == 0;
 }
+
+bool containsInPriorityQueue(struct PriorityQueue *pq, struct Node *node) {
+    for (int i = 0; i < pq->size; i++) {
+        if (pq->elements[i].node == node) {
+            return true;
+        }
+    }
+    return false;
+}
