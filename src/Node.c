@@ -184,28 +184,6 @@ void buildAdjacencyMatrix(struct Node * node, int ** matrix){
     }
 }
 
-// struct Node** reconstructPath(NodeMap *parentMap, struct Node *current, int pathCapacity, int *pathLength) {
-//     struct Node** path = (struct Node**)malloc(sizeof(struct Node*) * pathCapacity);
-//     *pathLength = 0;
-
-//     while (current != NULL) {
-//         if (*pathLength >= pathCapacity) {
-//             pathCapacity *= 2;
-//             path = (struct Node**)realloc(path, sizeof(struct Node*) * pathCapacity);
-//         }
-//         path[(*pathLength)++] = current;
-//         current = getNodeMapValue(parentMap, current);
-//     }
-
-//     for (int i = 0; i < *pathLength / 2; i++) {
-//         struct Node* temp = path[i];
-//         path[i] = path[*pathLength - 1 - i];
-//         path[*pathLength - 1 - i] = temp;
-//     }
-
-//     return path;
-// }
-
 
 struct Node** reconstructPath(NodeMap *parentMap, struct Node *current, int pathCapacity, int *pathLength) {
     *pathLength = 0; // Ensure pathLength is initialized to 0

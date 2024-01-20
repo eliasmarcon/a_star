@@ -1,6 +1,8 @@
 #include "Map.h"
 #include <stdlib.h>
 
+#define FLT_MAX 3.402823466e+38F /* max value */
+
 void initializeFloatMap(FloatMap *map, int capacity) {
     map->items = (FloatMapItem *)malloc(sizeof(FloatMapItem) * capacity);
     map->capacity = capacity;
@@ -8,7 +10,6 @@ void initializeFloatMap(FloatMap *map, int capacity) {
 }
 
 void setFloatMapValue(FloatMap *map, struct Node *key, float value) {
-    // Simple linear search. Inefficient for large maps
     for (int i = 0; i < map->size; i++) {
         if (map->items[i].key == key) {
             map->items[i].value = value;
@@ -20,7 +21,6 @@ void setFloatMapValue(FloatMap *map, struct Node *key, float value) {
     if (map->size < map->capacity) {
         map->items[map->size++] = (FloatMapItem){key, value};
     }
-    // Handle capacity limit (e.g., resize array)
 }
 
 float getFloatMapValue(FloatMap *map, struct Node *key) {
@@ -29,7 +29,7 @@ float getFloatMapValue(FloatMap *map, struct Node *key) {
             return map->items[i].value;
         }
     }
-    return -1; // Return a default value if not found
+    return FLT_MAX;
 }
 
 void initializeNodeMap(NodeMap *map, int capacity) {
@@ -49,7 +49,6 @@ void setNodeMapValue(NodeMap *map, struct Node *key, struct Node *value) {
     if (map->size < map->capacity) {
         map->items[map->size++] = (NodeMapItem){key, value};
     }
-    // Handle capacity limit as needed
 }
 
 struct Node *getNodeMapValue(NodeMap *map, struct Node *key) {
@@ -58,5 +57,6 @@ struct Node *getNodeMapValue(NodeMap *map, struct Node *key) {
             return map->items[i].value;
         }
     }
-    return NULL; // Return NULL if not found
+    
+    return NULL;
 }
