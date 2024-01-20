@@ -15,7 +15,7 @@
 const int neighboursHelper[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // up, down, left, right
 
 
-struct Node* getNeigbours(int ** maze, int x,int y, int * exit, int n, int parentDirection, int * id);
+struct Node* getNeigbours(int ** maze, int x,int y, int * exit, int n, int parentDirection, int * id, struct Node* exitNode);
 
 float calculateEucledianDistance(int x, int y, int * exit) {
     int dx = exit[1] - x;
@@ -23,7 +23,7 @@ float calculateEucledianDistance(int x, int y, int * exit) {
     return sqrt((dx * dx) + (dy * dy));
 }
 
-struct Node* mazeToGraph(int **maze, int n) {
+struct Node* mazeToGraph(int **maze, int n, struct Node* exitNode) {
     // define entry and exit points
     int entryY = -1;
     int exitY = -1;
@@ -40,7 +40,7 @@ struct Node* mazeToGraph(int **maze, int n) {
     int exit[2] = { exitY,n - 1 };
     printf("Exit: %d, %d\n", exit[1], exit[0]);
     int id = 0;
-    struct Node* entry = getNeigbours(maze, 0, entryY, (int *)&exit, n, 2, &id);
+    struct Node* entry = getNeigbours(maze, 0, entryY, (int *)&exit, n, 2, &id, exitNode);
     return entry;
 }
 
@@ -61,7 +61,7 @@ int inverseDirection(int direction){
     return -1;
 }
 
-struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int parentDirection, int * id) {
+struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int parentDirection, int * id, struct Node* exitNode) {
     
     // Allocate memory for a new node and initialize its properties
     struct Node * thisNode = (struct Node*)malloc(sizeof(struct Node));
@@ -75,6 +75,9 @@ struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int pare
     // Check if the current position is the exit
     if(exit[0] == y && exit[1] == x){
         thisNode->edgeCount = 0; // If it's the exit, there are no outgoing edges
+
+        exitNode = thisNode; // Set the exit node
+
         return thisNode;
     }
 
@@ -141,7 +144,7 @@ struct Node* getNeigbours(int ** maze, int x, int y, int * exit, int n, int pare
         int newParentDirection = inverseDirection(direction);
 
         // Recursively explore the neighbor node
-        struct Node* neighbour = getNeigbours(maze, newX, newY, exit, n, newParentDirection, id);
+        struct Node* neighbour = getNeigbours(maze, newX, newY, exit, n, newParentDirection, id, exitNode);
 
         // Create an edge to the neighbor and assign its weight and destination node
         thisNode->edges[edgeIndex] = (struct Edge*)malloc(sizeof(struct Edge));
@@ -181,80 +184,118 @@ void buildAdjacencyMatrix(struct Node * node, int ** matrix){
     }
 }
 
+// struct Node** reconstructPath(NodeMap *parentMap, struct Node *current, int pathCapacity, int *pathLength) {
+//     struct Node** path = (struct Node**)malloc(sizeof(struct Node*) * pathCapacity);
+//     *pathLength = 0;
 
-struct Node *a_star(struct Node *start, struct Node *goal, int size) {
+//     while (current != NULL) {
+//         if (*pathLength >= pathCapacity) {
+//             pathCapacity *= 2;
+//             path = (struct Node**)realloc(path, sizeof(struct Node*) * pathCapacity);
+//         }
+//         path[(*pathLength)++] = current;
+//         current = getNodeMapValue(parentMap, current);
+//     }
+
+//     for (int i = 0; i < *pathLength / 2; i++) {
+//         struct Node* temp = path[i];
+//         path[i] = path[*pathLength - 1 - i];
+//         path[*pathLength - 1 - i] = temp;
+//     }
+
+//     return path;
+// }
+
+
+struct Node** reconstructPath(NodeMap *parentMap, struct Node *current, int pathCapacity, int *pathLength) {
+    *pathLength = 0; // Ensure pathLength is initialized to 0
+    struct Node** path = (struct Node**)malloc(sizeof(struct Node*) * pathCapacity);
+
+    // Backtrack from goal to start
+    while (current != NULL) {
+        if (*pathLength >= pathCapacity) {
+            // Resize if necessary
+            pathCapacity *= 2;
+            path = (struct Node**)realloc(path, sizeof(struct Node*) * pathCapacity);
+        }
+        path[*pathLength] = current;
+        (*pathLength)++; // Increment the path length
+        // printf("Node %d: (%d, %d)\n", current->id, current->x, current->y);
+        current = getNodeMapValue(parentMap, current); // Move to the parent of the current node
+        // printf("Node %d: (%d, %d)\n", current->id, current->x, current->y);
+    }
+
+    // Reverse the path
+    for (int i = 0; i < *pathLength / 2; i++) {
+        struct Node* temp = path[i];
+        path[i] = path[*pathLength - 1 - i];
+        path[*pathLength - 1 - i] = temp;
+    }
+
+    return path;
+}
+
+
+
+struct Node** a_star(struct Node *start, struct Node *goal, int size, int *pathLength) {
     struct PriorityQueue openSet;
     initializePriorityQueue(&openSet, size); 
     insertWithPriority(&openSet, start, start->metric);
+    printf("Start: %d, %d\n", start->x, start->y);
+    printf("Metric: %.2f\n", start->metric);
 
-    Map gScore;
-    initializeMap(&gScore);
-    setMapValue(&gScore, start, 0);
+    FloatMap gScore;
+    initializeFloatMap(&gScore, size);
+    setFloatMapValue(&gScore, start, 0);
 
-    Map parentMap;
-    initializeMap(&parentMap);
+    NodeMap parentMap;
+    initializeNodeMap(&parentMap, size);
 
     while (!isEmpty(&openSet)) {
         struct Node *current = popLowest(&openSet);
-
-        if (current == goal) {
-            // Path found, reconstruct and return it
-            struct Node *path = reconstructPath(&parentMap, goal, size);
-            // Free resources
+        if (current->metric == 0) {
+            struct Node** path = reconstructPath(&parentMap, current, size, pathLength);
             free(openSet.elements);
-            // Return the path
             return path;
         }
 
         for (int i = 0; i < current->edgeCount; i++) {
             struct Node *neighbor = current->edges[i]->node;
-            float tentative_gScore = getMapValue(&gScore, current) + current->edges[i]->weight;
+            float tentative_gScore = getFloatMapValue(&gScore, current) + current->edges[i]->weight;
 
-            if (tentative_gScore < getMapValue(&gScore, neighbor)) {
-                setMapParent(&parentMap, neighbor, current);
-                setMapValue(&gScore, neighbor, tentative_gScore);
+            if (tentative_gScore < getFloatMapValue(&gScore, neighbor)) {
+                setNodeMapValue(&parentMap, neighbor, current);
+                setFloatMapValue(&gScore, neighbor, tentative_gScore);
                 float fScore = tentative_gScore + neighbor->metric;
 
-                if (!contains(&openSet, neighbor)) {
+                if (!containsInPriorityQueue(&openSet, neighbor)) {
                     insertWithPriority(&openSet, neighbor, fScore);
                 }
             }
         }
     }
 
-    // Free resources
     free(openSet.elements);
-    // No path found
-    return NULL;
+    return NULL; // No path found
 }
 
+void printPath(struct Node** path, int pathLength) {
+    if (path == NULL || pathLength <= 0) {
+        printf("No path found or path is empty.\n");
+        return;
+    }
 
-struct Node* reconstructPath(NodeMap *parentMap, struct Node *current, int pathCapacity) {
-    // Initialize an array or list to store the path
-    struct Node** path = (struct Node**)malloc(sizeof(struct Node*) * pathCapacity);
-    int pathSize = 0;
-
-    // Trace back the path from goal to start
-    while (current != NULL) {
-        if (pathSize >= pathCapacity) {
-            // Increase the path capacity
-            pathCapacity *= 2;
-            path = (struct Node**)realloc(path, sizeof(struct Node*) * pathCapacity);
+    printf("Path (length = %d):\n", pathLength);
+    for (int i = 0; i < pathLength; i++) {
+        if (path[i] != NULL) {
+            // Assuming each node has 'x', 'y', and 'id' attributes
+            printf("Node %d: (%d, %d)\n", path[i]->id, path[i]->x, path[i]->y);
+        } else {
+            printf("NULL Node encountered in path.\n");
         }
-        path[pathSize++] = current;
-        current = getNodeMapValue(parentMap, current);
     }
-
-    // Reverse the path as it is currently from goal to start
-    for (int i = 0; i < pathSize / 2; i++) {
-        struct Node* temp = path[i];
-        path[i] = path[pathSize - 1 - i];
-        path[pathSize - 1 - i] = temp;
-    }
-
-    // Return the path array and its size (if needed)
-    return path; // You might also want to return the path size
 }
+
 
 
 /*

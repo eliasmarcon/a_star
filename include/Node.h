@@ -31,12 +31,12 @@ struct Edge
     int isSubgraphRoot; // New field to indicate if the node is a subgraph root
 };*/
 
-struct Node* mazeToGraph(int **maze, int n);
+struct Node* mazeToGraph(int **maze, int n, struct Node* exitNode);
 void printNode(struct Node *node);
-int totalNodes(struct Node *root);
-
+int totalNodes(struct Node *root); 
 void buildAdjacencyMatrix(struct Node * node, int ** matrix);
-
+struct Node** a_star(struct Node *start, struct Node *goal, int size, int *pathLength);
+void printPath(struct Node** path, int pathLength);
 /*
 void printSubgraph(struct Node *node,int id);
 struct Node** splitTree(struct Node *root, int n);
