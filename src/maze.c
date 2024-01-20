@@ -50,7 +50,16 @@ void printMaze(int **maze, int size) {
     for (int y = 0; y < size; y++) {
         for (int x = 0; x < size; x++) {
             if(maze[y][x]==2){
-                printf("X");
+                printf(" >");
+            }
+            else if(maze[y][x]==3){
+                printf(" <");
+            }
+            else if(maze[y][x]==4){
+                printf(" v");
+            }
+            else if(maze[y][x]==5){
+                printf(" ʌ");
             }
             else{
                 printf("%c", maze[y][x] ? '[' : ' '); // '#' for wall, ' ' for path

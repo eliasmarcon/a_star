@@ -1,290 +1,179 @@
-Rank: 0, Setting n to 10
-Rank: 0, Setting n to 10
-Rank: 0, Setting n to 10
-Rank: 0, Setting n to 10
-Rank: 0, Setting n to 10
 ======================= Leader Election ===============================
-I am rank 0 and I am the leader
+I am rank 4 and I am the leader
+
 ======================= Maze Generation ===============================
-[][][][][][][][][][]
-[][]                
-[][][][]  [][][]  []
-[][]      []      []
-[][]  [][][]  [][][]
-      []  []      []
-[][][][]  [][][]  []
-[][]              []
-[][][][][][][][][][]
-[][][][][][][][][][]
-Entry: 0, 5
-Exit: 9, 1
+[][][][][][][][][][][][][][][][][][][][]
+[][]  []                      []        
+[][]  []  [][][][][]  [][][]  []  []  []
+[][]  []  []      []      []      []  []
+[][]  []  []  []  []  [][][][][][][]  []
+[][]      []  []  []  []              []
+[][][][][][]  []  [][][]  [][][][][]  []
+      []      []          []      []  []
+[][]  []  [][][][][][][][][]  [][][]  []
+[][]  []      []              []      []
+[][]  [][][]  []  [][][][][]  []  [][][]
+[][]  []      []          []  []      []
+[][]  []  [][][][][][][]  []  [][][]  []
+[][]      []              []      []  []
+[][][][][][]  [][][][][][][][][]  []  []
+[][]          []      []          []  []
+[][]  [][][][][]  []  [][][][][][][]  []
+[][]              []                  []
+[][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][][][][]
+Entry: 0, 7
+Exit: 19, 1
+
 ==================== Graph Representation ============================
-Node 0 (0,5) - Metric: 9.85
-	Edge 0 - Weight: 2, Node 1: (2,5)
-Node 1 (2,5) - Metric: 8.06
-	Edge 0 - Weight: 2, Node 2: (2,3)
-Node 2 (2,3) - Metric: 7.28
-	Edge 0 - Weight: 2, Node 3: (4,3)
-Node 3 (4,3) - Metric: 5.39
-	Edge 0 - Weight: 2, Node 4: (4,1)
-Node 4 (4,1) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 5: (2,1)
-	Edge 1 - Weight: 4, Node 6: (8,1)
-Node 5 (2,1) - Metric: 7.00
-Node 6 (8,1) - Metric: 1.00
-	Edge 0 - Weight: 1, Node 7: (9,1)
-	Edge 1 - Weight: 2, Node 8: (8,3)
-Node 7 (9,1) - Metric: 0.00
-Node 8 (8,3) - Metric: 2.24
-	Edge 0 - Weight: 2, Node 9: (6,3)
-Node 9 (6,3) - Metric: 3.61
-	Edge 0 - Weight: 2, Node 10: (6,5)
-Node 10 (6,5) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 11: (8,5)
-Node 11 (8,5) - Metric: 4.12
-	Edge 0 - Weight: 2, Node 12: (8,7)
-Node 12 (8,7) - Metric: 6.08
-	Edge 0 - Weight: 4, Node 13: (4,7)
-Node 13 (4,7) - Metric: 7.81
-	Edge 0 - Weight: 2, Node 14: (2,7)
-	Edge 1 - Weight: 2, Node 15: (4,5)
-Node 14 (2,7) - Metric: 9.22
-Node 15 (4,5) - Metric: 6.40
+Node 0 (0,7) - Metric: 19.92
+	Edge 0 - Weight: 2, Node 1: (2,7)
+Node 1 (2,7) - Metric: 18.03
+	Edge 0 - Weight: 6, Node 2: (2,13)
+Node 2 (2,13) - Metric: 20.81
+	Edge 0 - Weight: 2, Node 3: (4,13)
+Node 3 (4,13) - Metric: 19.21
+	Edge 0 - Weight: 2, Node 4: (4,11)
+Node 4 (4,11) - Metric: 18.03
+	Edge 0 - Weight: 2, Node 5: (6,11)
+Node 5 (6,11) - Metric: 16.40
+	Edge 0 - Weight: 2, Node 6: (6,9)
+Node 6 (6,9) - Metric: 15.26
+	Edge 0 - Weight: 2, Node 7: (4,9)
+Node 7 (4,9) - Metric: 17.00
+	Edge 0 - Weight: 2, Node 8: (4,7)
+Node 8 (4,7) - Metric: 16.16
+	Edge 0 - Weight: 2, Node 9: (6,7)
+Node 9 (6,7) - Metric: 14.32
+	Edge 0 - Weight: 4, Node 10: (6,3)
+Node 10 (6,3) - Metric: 13.15
+	Edge 0 - Weight: 2, Node 11: (8,3)
+Node 11 (8,3) - Metric: 11.18
+	Edge 0 - Weight: 4, Node 12: (8,7)
+Node 12 (8,7) - Metric: 12.53
+	Edge 0 - Weight: 4, Node 13: (12,7)
+Node 13 (12,7) - Metric: 9.22
+	Edge 0 - Weight: 2, Node 14: (12,5)
+Node 14 (12,5) - Metric: 8.06
+	Edge 0 - Weight: 6, Node 15: (18,5)
+Node 15 (18,5) - Metric: 4.12
+	Edge 0 - Weight: 4, Node 16: (18,1)
+	Edge 1 - Weight: 4, Node 30: (18,9)
+Node 16 (18,1) - Metric: 1.00
+	Edge 0 - Weight: 2, Node 17: (16,1)
+	Edge 1 - Weight: 1, Node 29: (19,1)
+Node 17 (16,1) - Metric: 3.00
+	Edge 0 - Weight: 2, Node 18: (16,3)
+Node 18 (16,3) - Metric: 3.61
+	Edge 0 - Weight: 2, Node 19: (14,3)
+Node 19 (14,3) - Metric: 5.39
+	Edge 0 - Weight: 2, Node 20: (14,1)
+Node 20 (14,1) - Metric: 5.00
+	Edge 0 - Weight: 4, Node 21: (10,1)
+Node 21 (10,1) - Metric: 9.00
+	Edge 0 - Weight: 6, Node 22: (4,1)
+	Edge 1 - Weight: 2, Node 26: (10,3)
+Node 22 (4,1) - Metric: 15.00
+	Edge 0 - Weight: 4, Node 23: (4,5)
+Node 23 (4,5) - Metric: 15.52
+	Edge 0 - Weight: 2, Node 24: (2,5)
+Node 24 (2,5) - Metric: 17.46
+	Edge 0 - Weight: 4, Node 25: (2,1)
+Node 25 (2,1) - Metric: 17.00
+Node 26 (10,3) - Metric: 9.22
+	Edge 0 - Weight: 2, Node 27: (12,3)
+	Edge 1 - Weight: 2, Node 28: (10,5)
+Node 27 (12,3) - Metric: 7.28
+Node 28 (10,5) - Metric: 9.85
+Node 29 (19,1) - Metric: 0.00
+Node 30 (18,9) - Metric: 8.06
+	Edge 0 - Weight: 2, Node 31: (16,9)
+Node 31 (16,9) - Metric: 8.54
+	Edge 0 - Weight: 2, Node 32: (16,11)
+Node 32 (16,11) - Metric: 10.44
+	Edge 0 - Weight: 2, Node 33: (18,11)
+Node 33 (18,11) - Metric: 10.05
+	Edge 0 - Weight: 6, Node 34: (18,17)
+Node 34 (18,17) - Metric: 16.03
+	Edge 0 - Weight: 8, Node 35: (10,17)
+Node 35 (10,17) - Metric: 18.36
+	Edge 0 - Weight: 2, Node 36: (10,15)
+Node 36 (10,15) - Metric: 16.64
+	Edge 0 - Weight: 2, Node 37: (8,15)
+Node 37 (8,15) - Metric: 17.80
+	Edge 0 - Weight: 2, Node 38: (8,17)
+Node 38 (8,17) - Metric: 19.42
+	Edge 0 - Weight: 6, Node 39: (2,17)
+Node 39 (2,17) - Metric: 23.35
+	Edge 0 - Weight: 2, Node 40: (2,15)
+Node 40 (2,15) - Metric: 22.02
+	Edge 0 - Weight: 4, Node 41: (6,15)
+Node 41 (6,15) - Metric: 19.10
+	Edge 0 - Weight: 2, Node 42: (6,13)
+Node 42 (6,13) - Metric: 17.69
+	Edge 0 - Weight: 6, Node 43: (12,13)
+Node 43 (12,13) - Metric: 13.89
+	Edge 0 - Weight: 2, Node 44: (12,11)
+Node 44 (12,11) - Metric: 12.21
+	Edge 0 - Weight: 4, Node 45: (8,11)
+Node 45 (8,11) - Metric: 14.87
+	Edge 0 - Weight: 2, Node 46: (8,9)
+Node 46 (8,9) - Metric: 13.60
+	Edge 0 - Weight: 6, Node 47: (14,9)
+Node 47 (14,9) - Metric: 9.43
+	Edge 0 - Weight: 2, Node 48: (14,7)
+	Edge 1 - Weight: 4, Node 50: (14,13)
+Node 48 (14,7) - Metric: 7.81
+	Edge 0 - Weight: 2, Node 49: (16,7)
+Node 49 (16,7) - Metric: 6.71
+Node 50 (14,13) - Metric: 13.00
+	Edge 0 - Weight: 2, Node 51: (16,13)
+Node 51 (16,13) - Metric: 12.37
+	Edge 0 - Weight: 2, Node 52: (16,15)
+Node 52 (16,15) - Metric: 14.32
+	Edge 0 - Weight: 4, Node 53: (12,15)
+Node 53 (12,15) - Metric: 15.65
+
 ======================= A Star Path ===============================
 Path found by a star: 
-Path (length = 7):
-Node 0: (0, 5)
-Node 1: (2, 5)
-Node 2: (2, 3)
-Node 3: (4, 3)
-Node 4: (4, 1)
-Node 6: (8, 1)
-Node 7: (9, 1)
-======================= Leader Election ===============================
-I am rank 0 and I am the leader
-======================= Maze Generation ===============================
-[][][][][][][][][][]
-[][]                
-[][][][]  [][][]  []
-[][]      []      []
-[][]  [][][]  [][][]
-      []  []      []
-[][][][]  [][][]  []
-[][]              []
-[][][][][][][][][][]
-[][][][][][][][][][]
-Entry: 0, 5
-Exit: 9, 1
-==================== Graph Representation ============================
-Node 0 (0,5) - Metric: 9.85
-	Edge 0 - Weight: 2, Node 1: (2,5)
-Node 1 (2,5) - Metric: 8.06
-	Edge 0 - Weight: 2, Node 2: (2,3)
-Node 2 (2,3) - Metric: 7.28
-	Edge 0 - Weight: 2, Node 3: (4,3)
-Node 3 (4,3) - Metric: 5.39
-	Edge 0 - Weight: 2, Node 4: (4,1)
-Node 4 (4,1) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 5: (2,1)
-	Edge 1 - Weight: 4, Node 6: (8,1)
-Node 5 (2,1) - Metric: 7.00
-Node 6 (8,1) - Metric: 1.00
-	Edge 0 - Weight: 1, Node 7: (9,1)
-	Edge 1 - Weight: 2, Node 8: (8,3)
-Node 7 (9,1) - Metric: 0.00
-Node 8 (8,3) - Metric: 2.24
-	Edge 0 - Weight: 2, Node 9: (6,3)
-Node 9 (6,3) - Metric: 3.61
-	Edge 0 - Weight: 2, Node 10: (6,5)
-Node 10 (6,5) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 11: (8,5)
-Node 11 (8,5) - Metric: 4.12
-	Edge 0 - Weight: 2, Node 12: (8,7)
-Node 12 (8,7) - Metric: 6.08
-	Edge 0 - Weight: 4, Node 13: (4,7)
-Node 13 (4,7) - Metric: 7.81
-	Edge 0 - Weight: 2, Node 14: (2,7)
-	Edge 1 - Weight: 2, Node 15: (4,5)
-Node 14 (2,7) - Metric: 9.22
-Node 15 (4,5) - Metric: 6.40
-======================= A Star Path ===============================
-Path found by a star: 
-Path (length = 7):
-Node 0: (0, 5)
-Node 1: (2, 5)
-Node 2: (2, 3)
-Node 3: (4, 3)
-Node 4: (4, 1)
-Node 6: (8, 1)
-Node 7: (9, 1)
-======================= Leader Election ===============================
-I am rank 0 and I am the leader
-======================= Maze Generation ===============================
-[][][][][][][][][][]
-[][]                
-[][][][]  [][][]  []
-[][]      []      []
-[][]  [][][]  [][][]
-      []  []      []
-[][][][]  [][][]  []
-[][]              []
-[][][][][][][][][][]
-[][][][][][][][][][]
-Entry: 0, 5
-Exit: 9, 1
-==================== Graph Representation ============================
-Node 0 (0,5) - Metric: 9.85
-	Edge 0 - Weight: 2, Node 1: (2,5)
-Node 1 (2,5) - Metric: 8.06
-	Edge 0 - Weight: 2, Node 2: (2,3)
-Node 2 (2,3) - Metric: 7.28
-	Edge 0 - Weight: 2, Node 3: (4,3)
-Node 3 (4,3) - Metric: 5.39
-	Edge 0 - Weight: 2, Node 4: (4,1)
-Node 4 (4,1) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 5: (2,1)
-	Edge 1 - Weight: 4, Node 6: (8,1)
-Node 5 (2,1) - Metric: 7.00
-Node 6 (8,1) - Metric: 1.00
-	Edge 0 - Weight: 1, Node 7: (9,1)
-	Edge 1 - Weight: 2, Node 8: (8,3)
-Node 7 (9,1) - Metric: 0.00
-Node 8 (8,3) - Metric: 2.24
-	Edge 0 - Weight: 2, Node 9: (6,3)
-Node 9 (6,3) - Metric: 3.61
-	Edge 0 - Weight: 2, Node 10: (6,5)
-Node 10 (6,5) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 11: (8,5)
-Node 11 (8,5) - Metric: 4.12
-	Edge 0 - Weight: 2, Node 12: (8,7)
-Node 12 (8,7) - Metric: 6.08
-	Edge 0 - Weight: 4, Node 13: (4,7)
-Node 13 (4,7) - Metric: 7.81
-	Edge 0 - Weight: 2, Node 14: (2,7)
-	Edge 1 - Weight: 2, Node 15: (4,5)
-Node 14 (2,7) - Metric: 9.22
-Node 15 (4,5) - Metric: 6.40
-======================= A Star Path ===============================
-Path found by a star: 
-Path (length = 7):
-Node 0: (0, 5)
-Node 1: (2, 5)
-Node 2: (2, 3)
-Node 3: (4, 3)
-Node 4: (4, 1)
-Node 6: (8, 1)
-Node 7: (9, 1)
-======================= Leader Election ===============================
-I am rank 0 and I am the leader
-======================= Maze Generation ===============================
-[][][][][][][][][][]
-[][]                
-[][][][]  [][][]  []
-[][]      []      []
-[][]  [][][]  [][][]
-      []  []      []
-[][][][]  [][][]  []
-[][]              []
-[][][][][][][][][][]
-[][][][][][][][][][]
-Entry: 0, 5
-Exit: 9, 1
-==================== Graph Representation ============================
-Node 0 (0,5) - Metric: 9.85
-	Edge 0 - Weight: 2, Node 1: (2,5)
-Node 1 (2,5) - Metric: 8.06
-	Edge 0 - Weight: 2, Node 2: (2,3)
-Node 2 (2,3) - Metric: 7.28
-	Edge 0 - Weight: 2, Node 3: (4,3)
-Node 3 (4,3) - Metric: 5.39
-	Edge 0 - Weight: 2, Node 4: (4,1)
-Node 4 (4,1) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 5: (2,1)
-	Edge 1 - Weight: 4, Node 6: (8,1)
-Node 5 (2,1) - Metric: 7.00
-Node 6 (8,1) - Metric: 1.00
-	Edge 0 - Weight: 1, Node 7: (9,1)
-	Edge 1 - Weight: 2, Node 8: (8,3)
-Node 7 (9,1) - Metric: 0.00
-Node 8 (8,3) - Metric: 2.24
-	Edge 0 - Weight: 2, Node 9: (6,3)
-Node 9 (6,3) - Metric: 3.61
-	Edge 0 - Weight: 2, Node 10: (6,5)
-Node 10 (6,5) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 11: (8,5)
-Node 11 (8,5) - Metric: 4.12
-	Edge 0 - Weight: 2, Node 12: (8,7)
-Node 12 (8,7) - Metric: 6.08
-	Edge 0 - Weight: 4, Node 13: (4,7)
-Node 13 (4,7) - Metric: 7.81
-	Edge 0 - Weight: 2, Node 14: (2,7)
-	Edge 1 - Weight: 2, Node 15: (4,5)
-Node 14 (2,7) - Metric: 9.22
-Node 15 (4,5) - Metric: 6.40
-======================= A Star Path ===============================
-Path found by a star: 
-Path (length = 7):
-Node 0: (0, 5)
-Node 1: (2, 5)
-Node 2: (2, 3)
-Node 3: (4, 3)
-Node 4: (4, 1)
-Node 6: (8, 1)
-Node 7: (9, 1)
-======================= Leader Election ===============================
-I am rank 0 and I am the leader
-======================= Maze Generation ===============================
-[][][][][][][][][][]
-[][]                
-[][][][]  [][][]  []
-[][]      []      []
-[][]  [][][]  [][][]
-      []  []      []
-[][][][]  [][][]  []
-[][]              []
-[][][][][][][][][][]
-[][][][][][][][][][]
-Entry: 0, 5
-Exit: 9, 1
-==================== Graph Representation ============================
-Node 0 (0,5) - Metric: 9.85
-	Edge 0 - Weight: 2, Node 1: (2,5)
-Node 1 (2,5) - Metric: 8.06
-	Edge 0 - Weight: 2, Node 2: (2,3)
-Node 2 (2,3) - Metric: 7.28
-	Edge 0 - Weight: 2, Node 3: (4,3)
-Node 3 (4,3) - Metric: 5.39
-	Edge 0 - Weight: 2, Node 4: (4,1)
-Node 4 (4,1) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 5: (2,1)
-	Edge 1 - Weight: 4, Node 6: (8,1)
-Node 5 (2,1) - Metric: 7.00
-Node 6 (8,1) - Metric: 1.00
-	Edge 0 - Weight: 1, Node 7: (9,1)
-	Edge 1 - Weight: 2, Node 8: (8,3)
-Node 7 (9,1) - Metric: 0.00
-Node 8 (8,3) - Metric: 2.24
-	Edge 0 - Weight: 2, Node 9: (6,3)
-Node 9 (6,3) - Metric: 3.61
-	Edge 0 - Weight: 2, Node 10: (6,5)
-Node 10 (6,5) - Metric: 5.00
-	Edge 0 - Weight: 2, Node 11: (8,5)
-Node 11 (8,5) - Metric: 4.12
-	Edge 0 - Weight: 2, Node 12: (8,7)
-Node 12 (8,7) - Metric: 6.08
-	Edge 0 - Weight: 4, Node 13: (4,7)
-Node 13 (4,7) - Metric: 7.81
-	Edge 0 - Weight: 2, Node 14: (2,7)
-	Edge 1 - Weight: 2, Node 15: (4,5)
-Node 14 (2,7) - Metric: 9.22
-Node 15 (4,5) - Metric: 6.40
-======================= A Star Path ===============================
-Path found by a star: 
-Path (length = 7):
-Node 0: (0, 5)
-Node 1: (2, 5)
-Node 2: (2, 3)
-Node 3: (4, 3)
-Node 4: (4, 1)
-Node 6: (8, 1)
-Node 7: (9, 1)
+Path (length = 18):
+Node 0: (0, 7)
+Node 1: (2, 7)
+Node 2: (2, 13)
+Node 3: (4, 13)
+Node 4: (4, 11)
+Node 5: (6, 11)
+Node 6: (6, 9)
+Node 7: (4, 9)
+Node 8: (4, 7)
+Node 9: (6, 7)
+Node 10: (6, 3)
+Node 11: (8, 3)
+Node 12: (8, 7)
+Node 13: (12, 7)
+Node 14: (12, 5)
+Node 15: (18, 5)
+Node 16: (18, 1)
+Node 29: (19, 1)
+
+======================= Maze with A*  =============================
+[][][][][][][][][][][][][][][][][][][][]
+[][]  []                      []     > >
+[][]  []  [][][][][]  [][][]  []  [] ʌ[]
+[][]  []  [] > > >[]      []      [] ʌ[]
+[][]  []  [] ʌ[] v[]  [][][][][][][] ʌ[]
+[][]      [] ʌ[] v[]  [] > > > > > > >[]
+[][][][][][] ʌ[] v[][][] ʌ[][][][][]  []
+ > > >[] > > >[] > > > > >[]      []  []
+[][] v[] ʌ[][][][][][][][][]  [][][]  []
+[][] v[] > < >[]              []      []
+[][] v[][][] ʌ[]  [][][][][]  []  [][][]
+[][] v[] > > >[]          []  []      []
+[][] v[] ʌ[][][][][][][]  []  [][][]  []
+[][] > > >[]              []      []  []
+[][][][][][]  [][][][][][][][][]  []  []
+[][]          []      []          []  []
+[][]  [][][][][]  []  [][][][][][][]  []
+[][]              []                  []
+[][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][][][][]

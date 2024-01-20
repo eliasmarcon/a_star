@@ -8,29 +8,6 @@
 #include "../include/Node.h"
 #define STANDARD_N 10
 
-void printMatrix(int** matrix, int rows, int cols){
-    
-    printf("Matrix:\n");
-    printf("         | ");
-    int dashes = 11;
-    for(int i = 0; i < cols; i++){
-        printf("%3d ", i);
-        dashes += 4;	
-    }
-    printf("\n");
-    for(int i = 0; i < dashes; i++) {
-        printf("-");
-    }
-    printf("\n");
-    for(int i = 0; i < rows; i++){
-        printf("Row %3d: | ", i);
-        for(int j = 0; j < cols; j++){
-            printf("%3d ", matrix[i][j]);
-        }
-        printf("\n");
-    }
-}
-
 
 int main(int argc, char** argv) {
     // Initialize MPI
@@ -43,8 +20,6 @@ int main(int argc, char** argv) {
     if (argc > 1)
     {
         n = atoi(argv[1]);
-        if (rank == 0)
-            printf("Rank: %d, Setting n to %d\n", rank, n);
     }
     else
     {
@@ -71,7 +46,7 @@ int main(int argc, char** argv) {
         printf("I am rank %d and I am the leader\n", rank);
         // B) Server - Randomly Generate a graph (maze with one exit- point and one entrance at the borders of the maze) of size n by n ( n should be large )
 
-        printf("======================= Maze Generation ===============================\n");
+        printf("\n======================= Maze Generation ===============================\n");
         maze = createMaze(n);
 
         printMaze(maze, n);
@@ -79,7 +54,7 @@ int main(int argc, char** argv) {
         struct Node *exitNode = malloc(sizeof(struct Node));
         struct Node *mazeGraph = mazeToGraph(maze, n, exitNode);
 
-        printf("==================== Graph Representation ============================\n");
+        printf("\n==================== Graph Representation ============================\n");
 
         printNode(mazeGraph);
 
@@ -102,11 +77,56 @@ int main(int argc, char** argv) {
         int pathLength;
         struct Node** path = a_star(mazeGraph, exitNode, totalNodesCount, &pathLength); 
 
-        printf("======================= A Star Path ===============================\n");
+        printf("\n======================= A Star Path ===============================\n");
 
         printf("Path found by a star: \n");
 
         printPath(path, pathLength);
+
+
+        printf("\n======================= Maze with A*  =============================\n");
+
+        // mark the path in the maze
+        for (int i = 0; i < pathLength; i++)
+        {
+            // from the node to the next node mark the other fileds as 2, 3, 4, 5 in order to find if its upside down or not
+            if (i < pathLength - 1)
+            {
+                if (path[i]->x < path[i + 1]->x)
+                {
+                    for (int j = path[i]->x; j < path[i + 1]->x; j++)
+                    {
+                        maze[path[i]->y][j] = 2;
+                    }
+                }
+                else if (path[i]->x > path[i + 1]->x)
+                {
+                    for (int j = path[i]->x; j > path[i + 1]->x; j--)
+                    {
+                        maze[path[i]->y][j] = 3;
+                    }
+                }
+                else if (path[i]->y < path[i + 1]->y)
+                {
+                    for (int j = path[i]->y; j < path[i + 1]->y; j++)
+                    {
+                        maze[j][path[i]->x] = 4;
+                    }
+                }
+                else if (path[i]->y > path[i + 1]->y)
+                {
+                    for (int j = path[i]->y; j > path[i + 1]->y; j--)
+                    {
+                        maze[j][path[i]->x] = 5;
+                    }
+                }
+            }
+
+            // also mark the last node
+            maze[path[i]->y][path[i]->x] = 2;
+        }
+
+        printMaze(maze, n);
     }
 
 
